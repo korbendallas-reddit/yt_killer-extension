@@ -1,0 +1,44 @@
+{
+
+	"manifest_version": 2,
+
+	"name": "Layer 7",
+	"description": "Extension for Layer 7 Solutions",
+	"version": "1.0",
+
+	"web_accessible_resources": [
+		"jquery-2.2.0.min.js",
+		"bootstrap.js",
+		"ytk.js",
+		"ytk_menu_style.css"
+	],
+  
+	"permissions": [
+		"*://*.reddit.com/r/*",
+		"webNavigation",
+		"webRequest",
+		"tabs"
+	],
+
+	"background": {
+			"scripts": [
+				"ytk.js"
+			]
+		},
+	"content_scripts": [
+		{
+			"matches": [
+				"*://*.reddit.com/r/*"
+			],
+			"js": [
+				"jquery-2.2.0.min.js",
+				"bootstrap.js",
+				"ytk.js"
+			],
+            		"css": [
+				"ytk_menu_style.css"
+			]
+        	}
+    	]
+   
+}
