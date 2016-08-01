@@ -1,7 +1,7 @@
 #ytk_menu {
-	position: static;
+	position: absolute;
 	top: 0;
-	left: 0;
+	left: -99999px;
 	box-sizing: border-box;
 	width: 310px;
 	height: auto;
@@ -39,7 +39,7 @@
 	color: #FFFFFF;
 	background-color: #000000;
 	cursor: pointer;
-	float: right;
+	float: left;
 }
 #ytk_menu_close:hover { 
 	background-color: #BB0000;
@@ -82,9 +82,15 @@
 	color: #FFFFFF;
 	background-color: #BB0000;
 }
+#ytk_menu_sub_selector_list li.toggle {
+	color: #000000;
+	background-color: #FFFFFF;
+	font-weight: bold;
+}
 #ytk_menu_sub_selector_list li.global {
 	border-top: 5px solid #000000;
 	border-bottom: 5px solid #000000;
+	font-weight: bold;
 }
 
 
@@ -114,7 +120,3 @@
 	color: #FFFFFF;
 	background-color: #BB0000;
 }
-
-
-
-
