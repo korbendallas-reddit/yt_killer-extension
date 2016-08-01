@@ -66,9 +66,9 @@ function generateYtkMenuItems() {
 				// Check if yt_killer is also a mod
 				var modLink = 'https://www.reddit.com/r/' + subList[i].data.display_name + '/about/moderators.json';
 
-				$.getJSON(modLink, function(jsonB) {
+				$.getJSON(modLink, function(json) {
 
-					var modList = jsonB.data.children;
+					var modList = json.data.children;
 
 					for (var j = 0; j < modList.length; j++) {
 
