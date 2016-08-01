@@ -86,7 +86,7 @@ function generateYtkMenuItems() {
 			}
 
 			// Add the sub to the list
-			if (true) {
+			if (ytkIsMod) {
 
 				var thisSub = '<li id="' + subList[i].data.display_name + '" class="' + oddEven;
 
