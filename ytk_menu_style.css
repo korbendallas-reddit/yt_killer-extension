@@ -1,0 +1,120 @@
+#ytk_menu {
+	position: static;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	width: 310px;
+	height: auto;
+	margin: 0;
+	-webkit-margin: 0;
+	padding: 0;
+	-webkit-padding: 0;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 5px solid #AAAAAA;
+	float: left;
+	clear: both;
+	z-index: 9999;
+}
+
+
+
+
+.ytk_menu_title {
+	width: 300px;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: middle;
+	font-weight: bold;
+	text-align: center;
+	color: #000000;
+	background-color: #CCCCCC;
+	float: left;
+}
+
+#ytk_menu_close {
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	color: #FFFFFF;
+	background-color: #000000;
+	cursor: pointer;
+	float: right;
+}
+#ytk_menu_close:hover { 
+	background-color: #BB0000;
+}
+
+
+
+
+.ytk_menu_sub_selector {
+	width: 300px;
+	height: auto;
+	text-align: left;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#ytk_menu_sub_selector_list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#ytk_menu_sub_selector_list li {
+	box-sizing: border-box;
+	width: 300px;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 5px;
+	background-color: #FFFFFF;
+	border-left: 5px solid #FFFFFF;
+	cursor: pointer;
+}
+#ytk_menu_sub_selector_list li.even {
+	background-color: #EEEEEE;
+}
+#ytk_menu_sub_selector_list li:hover {
+	padding-left: 5px;
+	border-left: 5px solid #BB0000;
+}
+#ytk_menu_sub_selector_list li.selected {
+	color: #FFFFFF;
+	background-color: #BB0000;
+}
+#ytk_menu_sub_selector_list li.global {
+	border-top: 5px solid #000000;
+	border-bottom: 5px solid #000000;
+}
+
+
+
+.ytk_menu_submit {
+	width: 150px;
+	height: 25px;
+	line-height: 25px;
+	border-top: 5px solid #AAAAAA;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	float: left;
+	cursor: pointer;
+}
+#ytk_whitelist {
+	color: #000000;
+	background-color: #FFFFFF;
+	
+}
+#ytk_blacklist {
+	color: #FFFFFF;
+	background-color: #000000;
+	font-weight: bold;
+}
+.ytk_menu_submit:hover {
+	color: #FFFFFF;
+	background-color: #BB0000;
+}
+
+
+
+
