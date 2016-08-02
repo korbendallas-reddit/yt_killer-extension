@@ -22,10 +22,11 @@
 	],
 
 	"background": {
-			"scripts": [
-				"ytk.js"
-			]
-		},
+		"scripts": [
+			"ytk.js"
+		]
+	},
+
 	"content_scripts": [
 		{
 			"matches": [
@@ -36,10 +37,15 @@
 				"bootstrap.js",
 				"ytk.js"
 			],
-            		"css": [
+        	    	"css": [
 				"ytk_menu_style.css"
 			]
-        	}
-    	]
+		}
+
+    	],
+
+	"icons": {
+		"32": "ytk.png"
+	}
    
 }
