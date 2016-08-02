@@ -10,11 +10,12 @@
 		"jquery-2.2.0.min.js",
 		"bootstrap.js",
 		"ytk.js",
-		"ytk_menu_style.css"
+		"ytk_menu_style.css",
+		"ytk.png"
 	],
   
 	"permissions": [
-		"*://*.reddit.com/r/*",
+		"*://*.reddit.com/*",
 		"webNavigation",
 		"webRequest",
 		"tabs"
@@ -28,7 +29,7 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"*://*.reddit.com/r/*"
+				"*://*.reddit.com/*"
 			],
 			"js": [
 				"jquery-2.2.0.min.js",
