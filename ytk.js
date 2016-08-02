@@ -268,7 +268,7 @@ function addYtkHotSpots() {
 // Add the icon next to links on the page (comments section)
 function addYtkHotSpotsInComments() {
 
-	var links = $('.thing a');
+	var links = $('a');
 
 	for (var i = 0; i < links.length; i++) {
 	
