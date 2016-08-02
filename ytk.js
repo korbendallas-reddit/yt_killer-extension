@@ -1,4 +1,4 @@
-var ytkMenu = '<div id="ytk_menu"><div class="ytk_menu_title"><div id="ytk_menu_close"></div>YouTube Killer</div><div class="ytk_menu_sub_selector"><ul id="ytk_menu_sub_selector_list"></ul></div><div id="ytk_whitelist" class="ytk_menu_submit">White List</div><div id="ytk_blacklist" class="ytk_menu_submit">Black List</div></div>';
+var ytkMenu = '<div id="ytk_menu"><div class="ytk_menu_title"><div id="ytk_menu_close" style="background-image: url(\'' + chrome.extension.getURL('ytk.png') + '\');"></div>YouTube Killer</div><div class="ytk_menu_sub_selector"><ul id="ytk_menu_sub_selector_list"></ul></div><div id="ytk_whitelist" class="ytk_menu_submit">White List</div><div id="ytk_blacklist" class="ytk_menu_submit">Black List</div></div>';
 var userSubsLink = 'https://www.reddit.com/subreddits/mine/moderator.json';
 
 
@@ -41,7 +41,11 @@ $('document').ready(function(){
 
 function generateYtkMenuItems() {
 
-	var currentSub = window.location.href.split('/')[4];
+	var currentSub = ''
+	var urlSplit = window.location.href.split('/');
+	if (urlSplit[3] == 'r') {
+		currentSub = urlSplit[4];
+	}
 
 	// Get a list of subs the user mods
 	$.getJSON(userSubsLink, function(json) {
@@ -56,7 +60,7 @@ function generateYtkMenuItems() {
 			var ytkIsMod = false;
 
 			// Enable global bans for mods of ytk
-			if (subList[i].data.display_name == 'yt_killer') {
+			if (subList[i].data.display_name == 'YT_Killer') {
 
 				enableGlobal = true;
 				ytkIsMod = true;
@@ -72,7 +76,7 @@ function generateYtkMenuItems() {
 
 					for (var j = 0; j < modList.length; j++) {
 
-						if (modList[j].name == 'yt_killer') {
+						if (modList[j].name == 'YT_Killer') {
 
 							ytkIsMod = true;
 							break;
@@ -115,14 +119,16 @@ function generateYtkMenuItems() {
 
 		}
 		
-		// Prepend 'Toggle all' --OR-- 'Global Ban' item
+		// Prepend 'Toggle All' --OR-- 'Global Ban' & 'Toggle All'  items
 		if (enableGlobal) {
 
-			ytkMenuItems = '<li class="odd toggle global">Toggle All (Global)</li>' + ytkMenuItems;
+			ytkMenuItems = '<li class="odd toggle global">Toggle All [ Global ]</li><li class="odd toggle">Toggle All</li>' + ytkMenuItems;
 
+		} else {
+
+			ytkMenuItems = '<li class="odd toggle">Toggle All</li>' + ytkMenuItems;
+		
 		}
-
-		ytkMenuItems = '<li class="odd toggle">Toggle All</li>' + ytkMenuItems;
 
 		// Create the elements and attach event handler
 		$('#ytk_menu_sub_selector_list').append(ytkMenuItems);
@@ -246,11 +252,11 @@ function addYtkHotSpots() {
 
 	for (var i = 0; i < links.length; i++) {
 
-		if (links[i].innerHTML.indexOf('youtu.be') > -1 || links[i].innerHTML.indexOf('youtube.com') > -1) {
+		if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
 
 			var thing = links[i].closest('.thing');
 			var thingId = $(thing).attr('id');
-			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="http://www.underconsideration.com/brandnew/archives/youtube_ios_icon.png" height="25px" width="25px">').insertAfter($(links[i]));
+			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
 
 		}
 
@@ -266,11 +272,11 @@ function addYtkHotSpotsInComments() {
 
 	for (var i = 0; i < links.length; i++) {
 	
-		if (links[i].innerHTML.indexOf('youtu.be') > -1 || links[i].innerHTML.indexOf('youtube.com') > -1) {
+		if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
 
 			var thing = $(links[i]).closest('.thing');
 			var thingId = $(thing).attr('id');
-			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="http://www.underconsideration.com/brandnew/archives/youtube_ios_icon.png" height="25px" width="25px">').insertAfter($(links[i]));
+			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
 
 		}
 
