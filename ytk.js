@@ -39,6 +39,7 @@ $('document').ready(function(){
 
 });
 
+
 function generateYtkMenuItems() {
 
 	var currentSub = ''
@@ -182,13 +183,6 @@ function generateYtkMenuItems() {
 }
 
 
-
-
-
-
-
-
-
 // Send to server
 function ytkSubmit(user, state, thing) {
 
@@ -226,14 +220,20 @@ function ytkSubmit(user, state, thing) {
 
 	var submitUri = 'http://localhost/api.py?user=' + user + '&subs=' + selectedSubs + '&state=' + state + '&thing=' + thing;
 
-	$.getJSON(submitUri, function(json) {
-		alert(json);
-	});
+	try {
+
+		$.getJSON(submitUri, function(json) {
+			alert(json);
+		});
+
+	} catch(err) {
+		console.log(err.message);
+	}
+
+	
+	return;
 
 }
-
-
-
 
 
 // Add the icon next to links on the page (regular sub page)
@@ -252,39 +252,61 @@ function addYtkHotSpots() {
 
 	for (var i = 0; i < links.length; i++) {
 
-		if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
+		try {
 
-			var thing = links[i].closest('.thing');
-			var thingId = $(thing).attr('id');
-			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
+			if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
 
+				var thing = links[i].closest('.thing');
+				var thingId = $(thing).attr('id');
+				$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
+
+			}
+
+		} catch(err) {
+			console.log(err.message);
 		}
 
 	}
 
 	ytkHotSpotHandler();
 
+
+	return;
+
 }
+
+
 // Add the icon next to links on the page (comments section)
 function addYtkHotSpotsInComments() {
 
 	var links = $('a');
 
 	for (var i = 0; i < links.length; i++) {
+		
+		try {
+
+			if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
 	
-		if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
+				var thing = $(links[i]).closest('.thing');
+				var thingId = $(thing).attr('id');
+				$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
 
-			var thing = $(links[i]).closest('.thing');
-			var thingId = $(thing).attr('id');
-			$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
+			}
 
+		} catch(err) {
+			console.log(err.message);
 		}
 
 	}
 
 	ytkHotSpotHandler();
 
+
+	return;
+
 }
+
+
 // Handle click events
 function ytkHotSpotHandler() {
 
