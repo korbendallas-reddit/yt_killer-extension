@@ -2,7 +2,7 @@ var ytkMenu = '<div id="ytk_menu"><div class="ytk_menu_title"><div id="ytk_menu_
 var userSubsLink = 'https://www.reddit.com/subreddits/mine/moderator.json';
 
 
-$('document').ready(function(){
+$('document').ready(function() {
 
 	addYtkHotSpots();
 
