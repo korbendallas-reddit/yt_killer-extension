@@ -12,6 +12,7 @@
 	color: #000000;
 	background-color: #FFFFFF;
 	border: 5px solid #AAAAAA;
+	box-shadow: 20px 20px 50px 0 #999999;
 	float: left;
 	clear: both;
 	z-index: 9999;
@@ -24,11 +25,12 @@
 	width: 300px;
 	height: 25px;
 	line-height: 25px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #000000;
 	vertical-align: middle;
 	font-weight: bold;
 	text-align: center;
-	color: #000000;
-	background-color: #CCCCCC;
 	float: left;
 }
 
@@ -37,12 +39,15 @@
 	height: 25px;
 	line-height: 25px;
 	color: #FFFFFF;
-	background-color: #000000;
+	background-color: #FFFFFF;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 25px 25px;
 	cursor: pointer;
 	float: left;
 }
 #ytk_menu_close:hover { 
-	background-color: #BB0000;
+	background-color: #E62117;
 }
 
 
@@ -76,21 +81,17 @@
 }
 #ytk_menu_sub_selector_list li:hover {
 	padding-left: 5px;
-	border-left: 5px solid #BB0000;
+	border-left: 5px solid #E62117;
 }
 #ytk_menu_sub_selector_list li.selected {
 	color: #FFFFFF;
-	background-color: #BB0000;
+	background-color: #E62117;
 }
 #ytk_menu_sub_selector_list li.toggle {
 	color: #000000;
 	background-color: #FFFFFF;
 	font-weight: bold;
-}
-#ytk_menu_sub_selector_list li.global {
-	border-top: 5px solid #000000;
-	border-bottom: 5px solid #000000;
-	font-weight: bold;
+	border-bottom: 1px solid #000000;
 }
 
 
@@ -118,5 +119,5 @@
 }
 .ytk_menu_submit:hover {
 	color: #FFFFFF;
-	background-color: #BB0000;
+	background-color: #E62117;
 }
