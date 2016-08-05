@@ -1,75 +1,58 @@
 var ytkMenu = '<div id="ytk_menu"><div class="ytk_menu_title"><div id="ytk_menu_close" style="background-image: url(\'' + chrome.extension.getURL('ytk.png') + '\');"></div>YouTube Killer</div><div class="ytk_menu_sub_selector"><ul id="ytk_menu_sub_selector_list"></ul></div><div id="ytk_whitelist" class="ytk_menu_submit">White List</div><div id="ytk_blacklist" class="ytk_menu_submit">Black List</div></div>';
-var userSubsLink = 'https://www.reddit.com/subreddits/mine/moderator.json';
 
 
 $('document').ready(function() {
 
 	addYtkHotSpots();
 
-	$('#siteTable').append(ytkMenu);
-
-	var userLink = $('#header-bottom-right > .user > a');
-	var user = userLink[0].innerText;
-	console.log(user);
-	
+	$('#siteTable').append(ytkMenu);	
 
 	generateYtkMenuItems();
-
-
-	$('#ytk_menu_close').off('click').on('click', function() {
-		$('#ytk_menu').css('top', 0);
-		$('#ytk_menu').css('left', -99999);
-	});
-
-	$('.ytk_menu_sub_selector_list li').off('click').on('click', function(event) {
-		subSelect(event);
-	});
-
-	$('#ytk_whitelist').off('click').on('click', function() {
-		var submitParent = $(event.target).parent();
-
-		ytkSubmit(user, 'whitelist', $(submitParent).attr('thing'));
-	});
-
-	$('#ytk_blacklist').off('click').on('click', function(event) {
-		var submitParent = $(event.target).parent();
-		
-		ytkSubmit(user, 'blacklist', $(submitParent).attr('thing'));
-	});
 
 });
 
 
 function generateYtkMenuItems() {
 
-	var currentSub = ''
+	// Get username
+	var user = '';
+
+	$.getJSON('https://www.reddit.com/api/me.json?raw_json=1&sr_detail=true&app=mweb-client', function(json) {
+		user=json.data.name;
+	});
+
+
+	var currentSub = '';
 	var urlSplit = window.location.href.split('/');
 	if (urlSplit[3] == 'r') {
 		currentSub = urlSplit[4];
 	}
 
-	// Get a list of subs the user mods
-	$.getJSON(userSubsLink, function(json) {
+	var subList = getModdedSubs();
+	var ytkMenuItems =  '<li class="odd toggle">Toggle All</li>';
+	var oddEven = 'even';
 
-		var enableGlobal = false;
-		var ytkMenuItems =  '';
-		var subList = json.data.children;
-		var oddEven = 'even';
+	for (var i = 0; i < subList.length; i++) {
 
-		for (var i = 0; i < subList.length; i++) {
+		if (subList[i].length > 2) {
 
 			var ytkIsMod = false;
 
-			// Enable global bans for mods of ytk
-			if (subList[i].data.display_name == 'YT_Killer') {
+			if (subList[i] == 'YT_Killer') {
 
-				enableGlobal = true;
+				ytkMenuItems = '<li class="odd toggle global">Toggle All [ Global ]</li>' + ytkMenuItems;
 				ytkIsMod = true;
 
 			} else {
 
 				// Check if yt_killer is also a mod
-				var modLink = 'https://www.reddit.com/r/' + subList[i].data.display_name + '/about/moderators.json';
+				var modLink = 'https://www.reddit.com/r/' + subList[i] + '/about/moderators.json';
+			
+	
+				// Set ajax calls to synchronous
+				$.ajaxSetup({
+					async: false
+				});
 
 				$.getJSON(modLink, function(json) {
 
@@ -88,98 +71,137 @@ function generateYtkMenuItems() {
 
 				});
 
+				// Set ajax calls back to asynchronous
+				$.ajaxSetup({
+					async: true
+				});
+
 			}
 
 			// Add the sub to the list
 			if (ytkIsMod) {
-
-				var thisSub = '<li id="' + subList[i].data.display_name + '" class="' + oddEven;
-
+	
+				var thisSub = '<li id="' + subList[i] + '" class="' + oddEven;
+	
 				// Automatically select the current sub
-				if (subList[i].data.display_name  == currentSub) {
-
+				if (subList[i]  == currentSub) {
 					thisSub = thisSub + ' selected';
-
 				}
 
-				thisSub = thisSub + '">' + subList[i].data.display_name + '</li>';
-
+				thisSub = thisSub + '">' + subList[i] + '</li>';
+	
 				ytkMenuItems = ytkMenuItems + thisSub;
-
+	
 				if (oddEven == 'odd') {
-
 					oddEven = 'even';
-
 				} else {
-
 					oddEven = 'odd';
-
 				}
 
 			}
 
 		}
+
+	}
+
+
+	// Create the elements and attach event handler
+	$('#ytk_menu_sub_selector_list').append(ytkMenuItems);
+	var newMenuItems = $('#ytk_menu_sub_selector_list li');
+
+	for (var i = 0; i < newMenuItems.length; i++) {
+
+		newMenuItems[i].addEventListener("click", function(event) {
+
+			var selectedSub = $(event.target);
+
+			if ($(selectedSub).hasClass('selected')) {
+
+				$(selectedSub).removeClass('selected');
 		
-		// Prepend 'Toggle All' --OR-- 'Global Ban' & 'Toggle All'  items
-		if (enableGlobal) {
+				if ($(selectedSub).hasClass('toggle')) {
 
-			ytkMenuItems = '<li class="odd toggle global">Toggle All [ Global ]</li><li class="odd toggle">Toggle All</li>' + ytkMenuItems;
+					var allSubs = $('#ytk_menu_sub_selector_list li');
 
-		} else {
+					for (var j = 0; j < allSubs.length; j++) {
 
-			ytkMenuItems = '<li class="odd toggle">Toggle All</li>' + ytkMenuItems;
+						$(allSubs[j]).removeClass('selected');
 		
-		}
-
-		// Create the elements and attach event handler
-		$('#ytk_menu_sub_selector_list').append(ytkMenuItems);
-
-		var newMenuItems = $('#ytk_menu_sub_selector_list li');
-
-		for (var i = 0; i < newMenuItems.length; i++) {
-
-			newMenuItems[i].addEventListener("click", function(event) {
-
-				var selectedSub = $(event.target);
-
-				if ($(selectedSub).hasClass('selected')) {
-
-					$(selectedSub).removeClass('selected');
-		
-					if ($(selectedSub).hasClass('toggle')) {
-
-						var allSubs = $('#ytk_menu_sub_selector_list li');
-
-						for (var j = 0; j < allSubs.length; j++) {
-
-							$(allSubs[j]).removeClass('selected');
-		
-						}
-					}
-				
-
-				} else {
-
-					$(selectedSub).addClass('selected');
-
-					if ($(selectedSub).hasClass('toggle')) {
-
-						var allSubs = $('#ytk_menu_sub_selector_list li');
-
-						for (var j = 0; j < allSubs.length; j++) {
-
-							$(allSubs[j]).addClass('selected');
-
-						}
 					}
 
 				}
-			});
+
+			} else {
+
+				$(selectedSub).addClass('selected');
+
+				if ($(selectedSub).hasClass('toggle')) {
+
+					var allSubs = $('#ytk_menu_sub_selector_list li');
+
+					for (var j = 0; j < allSubs.length; j++) {
+
+						$(allSubs[j]).addClass('selected');
+
+					}
+				}
+			}
+		});
+
+	}
+
+	
+	$('#ytk_menu_close').off('click').on('click', function(event) {
+
+		$('#ytk_menu').css('top', '0');
+		$('#ytk_menu').css('left', '-99999px');
+
+	});
+
+	$('#ytk_whitelist').off('click').on('click', function() {
+
+		var submitParent = $(event.target).parent();
+		ytkSubmit(user, 'whitelist', $(submitParent).attr('thing'));
+
+	});
+	$('#ytk_blacklist').off('click').on('click', function(event) {
+
+		var submitParent = $(event.target).parent();
+		ytkSubmit(user, 'blacklist', $(submitParent).attr('thing'));
+
+	});
+
+}
+
+var getModdedSubs = function() {
+
+	var subs = '';
+	var userSubsLink = 'https://www.reddit.com/subreddits/mine/moderator.json';
+
+	$.ajaxSetup({
+		async: false
+	});
+	$.getJSON(userSubsLink, function(json) {
+
+		var subList = json.data.children;
+
+		for (var i = 0; i < subList.length; i++) {
+
+			if (subs.length > 0) {
+				subs = subs + ',';
+			}
+
+			subs = subs + subList[i].data.display_name;
 
 		}
 
 	});
+	$.ajaxSetup({
+		async: true
+	});
 
+
+	return subs.split(',');
 }
 
 
@@ -196,9 +218,7 @@ function ytkSubmit(user, state, thing) {
 			if (!$(menuItems[i]).hasClass('toggle')) {
 
 				if (selectedSubs.length > 0) {
-
 					selectedSubs = selectedSubs + ',';
-
 				}
 
 				selectedSubs = selectedSubs + $(menuItems[i]).attr('id');
@@ -214,11 +234,13 @@ function ytkSubmit(user, state, thing) {
 
 			}
 
+			$(menuItems[i]).removeClass('selected');
+
 		}		
 
 	}
 
-	var submitUri = 'http://localhost/api.py?user=' + user + '&subs=' + selectedSubs + '&state=' + state + '&thing=' + thing;
+	var submitUri = 'https://localhost/api.py?user=' + user + '&subs=' + selectedSubs + '&state=' + state + '&thing=' + thing;
 
 	try {
 
@@ -229,6 +251,9 @@ function ytkSubmit(user, state, thing) {
 	} catch(err) {
 		console.log(err.message);
 	}
+
+	$('#ytk_menu').css('top', '0');
+	$('#ytk_menu').css('left', '-99999px');
 
 	
 	return;
