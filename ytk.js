@@ -16,10 +16,11 @@ function generateYtkMenuItems() {
 
 	// Get username
 	var user = '';
+	var uh = '';
 
-	$.getJSON('https://www.reddit.com/api/me.json?raw_json=1&sr_detail=true&app=mweb-client', function(json) {
-		user=json.data.name;
-	});
+	$.ajaxSetup({ async: false });
+	$.getJSON('https://www.reddit.com/api/me.json?raw_json=1', function(json) { user=json.data.name; uh=json.data.modhash; });
+	$.ajaxSetup({ async: true });
 
 
 	var currentSub = '';
@@ -50,9 +51,7 @@ function generateYtkMenuItems() {
 			
 	
 				// Set ajax calls to synchronous
-				$.ajaxSetup({
-					async: false
-				});
+				$.ajaxSetup({ async: false });
 
 				$.getJSON(modLink, function(json) {
 
@@ -160,14 +159,12 @@ function generateYtkMenuItems() {
 
 	$('#ytk_whitelist').off('click').on('click', function() {
 
-		var submitParent = $(event.target).parent();
-		ytkSubmit(user, 'whitelist', $(submitParent).attr('thing'));
+		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'drop', $('#ytk_menu').attr('thing'));
 
 	});
 	$('#ytk_blacklist').off('click').on('click', function(event) {
 
-		var submitParent = $(event.target).parent();
-		ytkSubmit(user, 'blacklist', $(submitParent).attr('thing'));
+		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'drop', $('#ytk_menu').attr('thing'));
 
 	});
 
@@ -178,9 +175,7 @@ var getModdedSubs = function() {
 	var subs = '';
 	var userSubsLink = 'https://www.reddit.com/subreddits/mine/moderator.json';
 
-	$.ajaxSetup({
-		async: false
-	});
+	$.ajaxSetup({async: false});
 	$.getJSON(userSubsLink, function(json) {
 
 		var subList = json.data.children;
@@ -196,9 +191,7 @@ var getModdedSubs = function() {
 		}
 
 	});
-	$.ajaxSetup({
-		async: true
-	});
+	$.ajaxSetup({async: true});
 
 
 	return subs.split(',');
@@ -206,46 +199,55 @@ var getModdedSubs = function() {
 
 
 // Send to server
-function ytkSubmit(user, state, thing) {
+function ytkSubmit(user, uh, vidlink, author, state, thing) {
 
 	var selectedSubs = '';
-	var menuItems = $('#ytk_menu_sub_selector_list li');
+	var menuItems = $('#ytk_menu_sub_selector_list li.selected');
+
+	if (menuItems.length < 1) {
+		return;
+	}
 
 	for (var i = 0; i < menuItems.length; i++) {
 
-		if ($(menuItems[i]).hasClass('selected')) {
+		if (!$(menuItems[i]).hasClass('toggle')) {
 
-			if (!$(menuItems[i]).hasClass('toggle')) {
+			if (selectedSubs.length > 0) {
+				selectedSubs = selectedSubs + ',';
+			}
 
-				if (selectedSubs.length > 0) {
-					selectedSubs = selectedSubs + ',';
-				}
+			selectedSubs = selectedSubs + '"' + $(menuItems[i]).attr('id') + '"';
 
-				selectedSubs = selectedSubs + $(menuItems[i]).attr('id');
+		} else {
 
-			} else {
+			if ($(menuItems[i]).hasClass('global')) {
 
-				if ($(menuItems[i]).hasClass('global')) {
-
-					selectedSubs = 'global';
-					break;
-
-				}
+				selectedSubs = '"YT_Killer"';
+				break;
 
 			}
 
-			$(menuItems[i]).removeClass('selected');
+		}
 
-		}		
+		$(menuItems[i]).removeClass('selected');		
 
 	}
 
-	var submitUri = 'https://localhost/api.py?user=' + user + '&subs=' + selectedSubs + '&state=' + state + '&thing=' + thing;
+	var data = '{ "video": "' + vidlink + '", "thing": "' + thing + '", "author": "/u/' + author + '", "bl_wl": "' + state + '", "subs": [ ' + selectedSubs + ' ] }';
 
 	try {
 
-		$.getJSON(submitUri, function(json) {
-			alert(json);
+		$.ajax({
+			method: 'post',
+			url: 'https://www.reddit.com/api/compose',
+			data: {
+				'uh': uh,
+				'to': '_korbendallas_',
+				'subject': state,
+				'text': btoa(data),
+				'api_type': 'json',
+				'from_sr': '',
+			}
 		});
 
 	} catch(err) {
@@ -283,7 +285,9 @@ function addYtkHotSpots() {
 
 				var thing = links[i].closest('.thing');
 				var thingId = $(thing).attr('id');
-				$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
+				var vidlink = $(links[i]).attr('href');
+				var author = $(thing).attr('data-author');
+				$('<img thing="' + thingId + '" vidlink="' + vidlink + '" author="' + author + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
 
 			}
 
@@ -343,7 +347,11 @@ function ytkHotSpotHandler() {
 			
 			var hotSpot = $(event.target);
 			var thingId = hotSpot.attr('thing');
+			var vidlink = hotSpot.attr('vidlink');
+			var author = hotSpot.attr('author');
 			$('#ytk_menu').attr('thing', thingId);
+			$('#ytk_menu').attr('vidlink', vidlink);
+			$('#ytk_menu').attr('author', author);
 			
 			var hotSpotLocation = hotSpot.offset();
 
