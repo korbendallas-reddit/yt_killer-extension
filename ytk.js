@@ -242,7 +242,7 @@ function ytkSubmit(user, uh, vidlink, author, state, thing) {
 			url: 'https://www.reddit.com/api/compose',
 			data: {
 				'uh': uh,
-				'to': '_korbendallas_',
+				'to': 'yt_killer',
 				'subject': state,
 				'text': btoa(data),
 				'api_type': 'json',
