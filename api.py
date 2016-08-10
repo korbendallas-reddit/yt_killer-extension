@@ -29,9 +29,9 @@ def Main():
     except Exception as e:
         
         print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript'
+        print 'Content-Type: application/javascript\n\n'
         print ''
-        print 'Error processing your request.' + e.message
+        print 'Error processing request.'
         
         
     return
@@ -45,19 +45,21 @@ def doStuff(mod, video, thing, author, bl_wl, subs):
         # Validate data & make DB calls
         
         print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript'
+        print 'Content-Type: application/javascript\n\n'
         print ''
-        print 'Request Processed'
+        print 'Request Processed.'
 
     except Exception as e:
         
         print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript'
+        print 'Content-Type: application/javascript\n\n'
         print ''
-        print 'Error processing your request.'
+        print 'Error processing request.'
 
 
     return
+
+
 
 
 
