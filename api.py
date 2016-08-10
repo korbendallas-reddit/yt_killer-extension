@@ -1,4 +1,4 @@
-import cgi, cgitb
+import cgi, cgitb, json, base64
 cgitb.enable()
 
 
@@ -11,16 +11,11 @@ def Main():
 
         if (len(keys) > 0):
 
-            mod = data['mod'].value
-            video = data['video'].value
-            thing = data['thing'].value
-            author = data['auth'].value
-            bl_wl = data['bl_wl'].value
-            subs = data['subs'].value
+            glob = data['glob'].value
 
-            if mod != 'mod' and video != 'video' and thing != 'thing' and author != 'author' and bl_wl != 'bl_wl' and subs != 'subs':
+            if str(glob) != 'glob':
 
-                doStuff(mod, video, thing, author, bl_wl, subs)
+                doStuff(glob)
 
 
             return
@@ -31,18 +26,28 @@ def Main():
         print 'HTTP/1.0 200 OK'
         print 'Content-Type: application/json'
         print ''
-        print '{status:"error"}'
+        print '{status:"error"}' + e.message
         
         
     return
 
 
 # Handle data
-def doStuff(mod, video, thing, author, bl_wl, subs):
+def doStuff(glob):
 
     try:
 
-        # Validate data & make DB calls
+        # Decode Base64 and grab JSON variables
+        jsonData = json.loads(base64.b64decode(glob))
+
+        mod = jsonData['mod']
+        video = jsonData['video']
+        thing = jsonData['thing']
+        author = jsonData['author']
+        bl_wl = jsonData['bl_wl']
+        subs = jsonData['subs'].split(',')
+
+        # Do validation and DB Calls
         
         print 'HTTP/1.0 200 OK'
         print 'Content-Type: application/json'
@@ -54,7 +59,7 @@ def doStuff(mod, video, thing, author, bl_wl, subs):
         print 'HTTP/1.0 200 OK'
         print 'Content-Type: application/json'
         print ''
-        print '{status:"error"}'
+        print '{status:"error processing"}' + e.message
 
 
     return
