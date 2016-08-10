@@ -28,10 +28,10 @@ def Main():
         
     except Exception as e:
         
-        print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript\n\n'
+        print 'HTTP/1.0 200 OK'
+        print 'Content-Type: application/json'
         print ''
-        print 'Error processing request.'
+        print '{status:"error"}'
         
         
     return
@@ -44,22 +44,20 @@ def doStuff(mod, video, thing, author, bl_wl, subs):
 
         # Validate data & make DB calls
         
-        print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript\n\n'
+        print 'HTTP/1.0 200 OK'
+        print 'Content-Type: application/json'
         print ''
-        print 'Request Processed.'
+        print '{status:"success"}'
 
     except Exception as e:
         
-        print 'HTTP/1.0 200 OK\n\n'
-        print 'Content-Type: application/javascript\n\n'
+        print 'HTTP/1.0 200 OK'
+        print 'Content-Type: application/json'
         print ''
-        print 'Error processing request.'
+        print '{status:"error"}'
 
 
     return
-
-
 
 
 
