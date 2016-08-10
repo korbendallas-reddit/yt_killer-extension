@@ -216,13 +216,13 @@ function ytkSubmit(user, uh, vidlink, author, state, thing) {
 				selectedSubs = selectedSubs + ',';
 			}
 
-			selectedSubs = selectedSubs + '"' + $(menuItems[i]).attr('id') + '"';
+			selectedSubs = selectedSubs + $(menuItems[i]).attr('id');
 
 		} else {
 
 			if ($(menuItems[i]).hasClass('global')) {
 
-				selectedSubs = '"YT_Killer"';
+				selectedSubs = 'YT_Killer';
 				break;
 
 			}
@@ -233,26 +233,20 @@ function ytkSubmit(user, uh, vidlink, author, state, thing) {
 
 	}
 
-	var data = '{ "video": "' + vidlink + '", "thing": "' + thing + '", "author": "/u/' + author + '", "bl_wl": "' + state + '", "subs": [ ' + selectedSubs + ' ] }';
-
+	
 	try {
 
 		$.ajax({
-			method: 'post',
-			url: 'https://www.reddit.com/api/compose',
-			data: {
-				'uh': uh,
-				'to': 'yt_killer',
-				'subject': state,
-				'text': btoa(data),
-				'api_type': 'json',
-				'from_sr': '',
-			}
+			method: 'get',
+			url: 'https://layer7.solutions/api/ytk.py?mod=' + user + '&video=' + vidlink + '&thing=' + thing + '&auth=' + author + '&bl_wl=' + state + '&subs=' + selectedSubs,
+			dataType: 'jsonp',
+			headers: { 'Access-Control-Allow-Origin': '*' }
 		});
 
 	} catch(err) {
 		console.log(err.message);
 	}
+
 
 	$('#ytk_menu').css('top', '0');
 	$('#ytk_menu').css('left', '-99999px');
