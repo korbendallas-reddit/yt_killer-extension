@@ -233,12 +233,14 @@ function ytkSubmit(user, uh, vidlink, author, state, thing) {
 
 	}
 
-	
+	var data = '{ "mod": "' + user + '", "video": "' + vidlink + '", "thing": "' + thing + '", "author": "/u/' + author + '", "bl_wl": "' + state + '", "subs": "' + selectedSubs + '" }';
+	//{ "mod": "_korbendallas_", "video": "https://youtube.com", "thing": "t3_asdfg", "author": "/u/d0cr3d", "bl_wl": "add", "subs": "YT_Killer,subbie" }
+
 	try {
 
 		$.ajax({
 			method: 'get',
-			url: 'https://layer7.solutions/api/ytk.py?mod=' + user + '&video=' + vidlink + '&thing=' + thing + '&auth=' + author + '&bl_wl=' + state + '&subs=' + selectedSubs,
+			url: 'https://layer7.solutions/api/ytk.py?glob=' + btoa(data),
 			dataType: 'jsonp',
 			headers: { 'Access-Control-Allow-Origin': '*' }
 		});
