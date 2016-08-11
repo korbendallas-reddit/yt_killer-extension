@@ -164,7 +164,7 @@ function generateYtkMenuItems() {
 	});
 	$('#ytk_blacklist').off('click').on('click', function(event) {
 
-		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'drop', $('#ytk_menu').attr('thing'));
+		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'add', $('#ytk_menu').attr('thing'));
 
 	});
 
