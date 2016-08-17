@@ -159,7 +159,7 @@ function generateYtkMenuItems() {
 
 	$('#ytk_whitelist').off('click').on('click', function() {
 
-		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'drop', $('#ytk_menu').attr('thing'));
+		ytkSubmit(user, uh, $('#ytk_menu').attr('vidlink'), $('#ytk_menu').attr('author'), 'remove', $('#ytk_menu').attr('thing'));
 
 	});
 	$('#ytk_blacklist').off('click').on('click', function(event) {
@@ -240,13 +240,31 @@ function ytkSubmit(user, uh, vidlink, author, state, thing) {
 
 		$.ajax({
 			method: 'get',
+			dataType: 'json',
 			url: 'https://layer7.solutions/api/ytk.py?glob=' + btoa(data),
 			dataType: 'jsonp',
 			headers: { 'Access-Control-Allow-Origin': '*' }
+		})
+		.done(function(data) {
+			$('body').append('<div id="ytk-notification" style="position:fixed;bottom:20px;left:0;width:100%;height:3.0em;line-height:3.0em;font-size:1.4em;font-weight:bold;text-align:center;vertical-align:middle;color:#FFFFFF;background:#E62117;z-index:99999;">Your request has been processed successfully.</div>');
+			setTimeout(function() {
+				$('#ytk-notification').fadeOut();
+			}, 5000);
+		})
+		.error(function(data) {
+			console.log(data);
+			$('body').append('<div id="ytk-notification" style="position:fixed;bottom:20px;left:0;width:100%;height:3.0em;line-height:3.0em;font-size:1.4em;font-weight:bold;text-align:center;vertical-align:middle;color:#FFFFFF;background:#E62117;z-index:99999;">An error has occurred, please try again.</div>');
+			setTimeout(function() {
+				$('#ytk-notification').fadeOut();
+			}, 5000);
 		});
 
 	} catch(err) {
 		console.log(err.message);
+		$('body').append('<div id="ytk-notification" style="position:fixed;bottom:20px;left:0;width:100%;height:3.0em;line-height:3.0em;font-size:1.4em;font-weight:bold;text-align:center;vertical-align:middle;color:#FFFFFF;background:#E62117;z-index:99999;">An error has occurred, please try again.</div>');
+		setTimeout(function() {
+			$('#ytk-notification').fadeOut();
+		}, 5000);
 	}
 
 
