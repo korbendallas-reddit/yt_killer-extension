@@ -322,16 +322,23 @@ function addYtkHotSpots() {
 // Add the icon next to links on the page (comments section)
 function addYtkHotSpotsInComments() {
 
-	var links = $('a');
+	var links = $('.content a');
 
 	for (var i = 0; i < links.length; i++) {
 		
 		try {
 
 			if ($(links[i]).attr('href').indexOf('youtu.be') > -1 || $(links[i]).attr('href').indexOf('youtube.com') > -1) {
-	
-				var thing = $(links[i]).closest('.thing');
-				var thingId = $(thing).attr('id');
+				
+				var thingId = '';
+
+				if ($(links[i]).hasClass('title')) {
+					thingId = 'thing_t3_' + window.location.href.split('/')[6];
+				} else {
+					var thing = $(links[i]).closest('.thing');
+					thingId = $(thing).attr('id');
+				}
+
 				$('<img thing="' + thingId + '" class="ytk_hot_spot" src="' + chrome.extension.getURL('ytk.png') + '" height="25px" width="25px">').insertAfter($(links[i]));
 
 			}
